@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+# path to your application root.
+APP_ROOT = File.expand_path("..", __dir__).freeze
+
+files = [
+  {source: ".env.template", destination: ".env.local"},
+]
+
+FileUtils.chdir(APP_ROOT) do
+  files.each do |file|
+    unless File.exist?(file[:destination])
+      puts "\n== Creating file #{file[:destination]} =="
+      FileUtils.cp(file[:source], file[:destination])
+    end
+  end
+end

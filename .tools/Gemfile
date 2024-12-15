@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+group :development do
+  gem "overcommit", require: false
+end
+
+# CI uses `test` environment by default.
+group :development, :test do
+  gem "brakeman", require: false
+  gem "bundler-audit", require: false
+  gem "bundler-leak", require: false
+
+  gem "fasterer", require: false
+
+  gem "rails_best_practices", require: false
+
+  gem "prism", require: false
+  gem "rubocop", require: false
+
+  gem "rubocop-configs", require: false, git: "https://github.com/crosspath/rubocop-configs.git"
+
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rake", require: false
+
+  gem "rubocop-thread_safety", require: false
+
+  gem "slim_lint", require: false
+  gem "solargraph", require: false
+end

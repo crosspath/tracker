@@ -1,0 +1,9 @@
+*.local
+.annotate_solargraph_schema
+/.bundle/*
+!/.bundle/config.*
+/config/master.key
+/log/*
+/public/assets
+/storage/*
+/tmp/*
