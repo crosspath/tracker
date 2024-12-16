@@ -1,0 +1,34 @@
+requirements:
+  feature:
+    comment: "Feature"
+    optional_data: {}
+    relations:
+      includes: [user_story]
+    unit_of_work: false
+  user_story:
+    comment: "User Story"
+    optional_data: {}
+    relations:
+      includes: [task]
+    unit_of_work: false
+  task:
+    comment: "Task"
+    optional_data:
+      external_url:
+        type: string
+        nil: false
+        default: ""
+        comment: "External URL"
+      min_estimated_duration:
+        type: float
+        nil: true
+        default: ~
+        comment: "Minimal estimated duration in hours"
+      max_estimated_duration:
+        type: float
+        nil: true
+        default: ~
+        comment: "Maximal estimated duration in hours"
+    relations:
+      includes: []
+    unit_of_work: true

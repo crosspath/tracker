@@ -6,3 +6,4 @@ Functionality:
 4. Workers: Андрей, Тимур, Евгений
 5. Work logs
 6. Budget report
+7. Payouts to workers
