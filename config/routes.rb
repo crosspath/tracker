@@ -10,18 +10,18 @@ Rails.application.routes.draw do
 
   root to: "welcome#index"
 
-  resources "payouts", only: %i[create destroy show index new update]
+  resources "payouts", only: %i[create destroy index new show update]
 
-  resources "projects", only: %i[create destroy show index new update] do
-    resources "requirements", only: %i[create destroy show index new update] do
-      resources "relations", only: %i[new create edit destroy]
+  resources "projects", only: %i[create destroy index new show update] do
+    resources "requirements", only: %i[create destroy index new show update] do
+      resources "relations", only: %i[create destroy new]
     end
   end
 
-  resources "workers", only: %i[create destroy show index new update]
+  resources "workers", only: %i[create destroy index new show update]
 
   namespace "work" do
-    resources "logs", only: %i[create destroy show index new update]
-    resources "reviews", only: %i[create destroy show index new update]
+    resources "logs", only: %i[create destroy index new show update]
+    resources "reviews", only: %i[create destroy index new show update]
   end
 end
