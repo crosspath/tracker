@@ -1,0 +1,15 @@
+h1 = link_to("Payouts", payouts_path)
+
+h1 = link_to("Projects", projects_path)
+- @projects.each do |project|
+  p = link_to(project.title, project_path(project))
+p = link_to("+ project", new_project_path)
+
+h1 = link_to("Workers", workers_path)
+- @workers.each do |worker|
+  p = link_to(worker.title, worker_path(worker))
+p = link_to("+ worker", new_worker_path)
+
+h1 = link_to("Work logs", work_logs_path)
+
+h1 = link_to("Work reviews", work_reviews_path)

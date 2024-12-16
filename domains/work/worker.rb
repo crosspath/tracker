@@ -7,4 +7,6 @@ class Work::Worker < Base::Model
     has_many :logs, class_name: "Work::Log", dependent: :delete_all
     has_many :reviews, class_name: "Work::Review", dependent: :delete_all
   end
+
+  before_validation { self.position ||= (Work::Worker.maximum(:position) || -1) + 1 }
 end

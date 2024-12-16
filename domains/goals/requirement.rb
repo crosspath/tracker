@@ -13,4 +13,8 @@ class Goals::Requirement < Base::Model
   end
 
   validates :kind, inclusion: {in: AppConfig.requirements.members.map(&:to_s)}
+
+  before_validation do
+    self.position ||= (Goals::Requirement.where(kind:, project_id:).maximum(:position) || -1) + 1
+  end
 end

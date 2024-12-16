@@ -3,6 +3,7 @@
 /.bundle/*
 !/.bundle/config.*
 /config/master.key
+/config/settings.local.yml
 /log/*
 /public/assets
 /storage/*
