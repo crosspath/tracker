@@ -1,16 +1,10 @@
-h1 Project
-= render "form"
-
-h2 = link_to("Requirements", project_requirements_path(project_id: @project.id))
-- groups = @requirements.group(:kind).count
+h1 Requirements
 - req_kinds = AppConfig.requirements.members
-- groups.each do |kind, count|
+- @requirements.group_by(&:kind).each do |kind, requirements|
   - has_key = req_kinds.include?(kind.to_sym)
   h3
     => has_key ? AppConfig.requirements[kind].comment : kind
-    = "(total: #{count})"
-  - if count > 7
-    p Top 7:
-  - @requirements.where(kind:).limit(7).each do |req|
+    = "(total: #{requirements.size})"
+  - requirements.each do |req|
     p = link_to(req.title, project_requirement_path(project_id: @project.id, id: req.id))
 p = link_to("+ requirement", new_project_requirement_path(project_id: @project.id))

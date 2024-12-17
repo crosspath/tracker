@@ -1,0 +1,57 @@
+ruby:
+  form_url =
+    if @requirement.persisted?
+      project_requirement_path(project_id: @project.id, id: @requirement.id)
+    else
+      project_requirements_path(project_id: @project.id)
+    end
+  submit_label = @requirement.persisted? ? "Update record" : "Create record"
+
+= form_for(@requirement, url: form_url) do |f|
+  table style="border-collapse: collapse"
+    tbody
+      - kinds = AppConfig.requirements.to_h { |k, v| [v.comment, k] }
+      tr
+        th = @requirement.column_comments[:kind]
+        td = f.select(:kind, kinds)
+      tr
+        th = @requirement.column_comments[:title]
+        td = f.text_field(:title)
+      tr
+        th = @requirement.column_comments[:description]
+        td = f.text_area(:description)
+      = f.fields_for(:optional_data) do |ff|
+        - AppConfig.requirements.each_pair do |kind, options| # rubocop:disable Lint/UnusedBlockArgument
+          - options.optional_data.each_pair do |attr_name, attr_options|
+            tr data-optional="" data-kind=kind style="display: none"
+              th = attr_options.comment
+              td
+                - case attr_options.type
+                - when "string"
+                  = ff.text_field(attr_name)
+                - when "float"
+                  ruby:
+                    input_options = {
+                      min: attr_options.min_value,
+                      max: attr_options.max_value,
+                      step: attr_options.step,
+                    }
+                  = ff.number_field(attr_name, input_options.compact_blank)
+    tfoot
+      tr
+        td colspan="2" = f.submit(submit_label)
+
+javascript:
+  function showOptionalData(kind) {
+    const tr = document.querySelectorAll("tr[data-optional]")
+    tr.forEach((el) => {
+      if (el.dataset.kind == kind)
+        el.style.display = ""
+      else
+        el.style.display = "none"
+    })
+  }
+
+  const selectKind = document.querySelector("#goals_requirement_kind")
+  showOptionalData(selectKind.value)
+  selectKind.addEventListener("input", (ev) => showOptionalData(ev.target.value))

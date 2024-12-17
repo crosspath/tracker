@@ -21,7 +21,10 @@ class CreateCoreTables < ActiveRecord::Migration[8.0]
     end
 
     create_table "goals_requirement_relations" do |t|
-      t.references "left", null: false, foreign_key: {to_table: "goals_requirements"}
+      t.references "left",
+        null: false,
+        foreign_key: {to_table: "goals_requirements"},
+        comment: "Required for"
       t.references "right",
         null: false,
         foreign_key: {to_table: "goals_requirements"},

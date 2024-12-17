@@ -27,7 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_15_182423) do
   end
 
   create_table "goals_requirement_relations", force: :cascade do |t|
-    t.bigint "left_id", null: false
+    t.bigint "left_id", null: false, comment: "Required for"
     t.bigint "right_id", null: false, comment: "Depends on"
     t.string "kind", null: false, comment: "Type of relation"
     t.index ["left_id"], name: "index_goals_requirement_relations_on_left_id"

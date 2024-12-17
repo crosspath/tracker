@@ -13,7 +13,8 @@ Rails.application.routes.draw do
   resources "payouts", only: %i[create destroy index new show update]
 
   resources "projects", only: %i[create destroy index new show update] do
-    resources "requirements", only: %i[create destroy index new show update] do
+    resources "requirements", only: %i[create destroy index new show update]
+    namespace "requirements" do
       resources "relations", only: %i[create destroy new]
     end
   end

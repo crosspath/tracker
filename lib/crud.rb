@@ -23,15 +23,20 @@ module Crud
     attr_reader :config
 
     def initialize
-      @config = {}
+      @config = {attributes: {}, paths: {}}
     end
 
-    %i[attributes class_name item_name].each do |mth|
-      define_method(mth) { |value| @config[mth] = value }
+    # @param array [Array<String>]
+    # @param hash [Hash<String, Array | Hash | String>]
+    def attributes(array, hash = {})
+      @config[:attributes][:permit] = array + [hash]
+      @config[:attributes][:slice] = array + hash.keys
     end
 
-    %i[index_path new_path show_path].each do |mth|
-      define_method(mth) { |&block| @config[mth] = block }
+    %i[class_name item_name].each { |mth| define_method(mth) { |value| @config[mth] = value } }
+
+    %i[index new show].each do |mth|
+      define_method(:"#{mth}_path") { |&block| @config[:paths][mth] = block }
     end
   end
 
@@ -85,7 +90,7 @@ module Crud
       self.object = crud_options[:class_name].constantize.find(params[:id])
     end
 
-    # Initialize empty object
+    # Initialize empty object.
     def init_object
       self.object = crud_options[:class_name].constantize.new
     end
@@ -102,20 +107,20 @@ module Crud
 
     # Helper method for accessing application path for model instance.
     def object_path(key)
-      block = crud_options[:"#{key}_path"]
+      block = crud_options[:paths][key]
       instance_eval(&block)
     end
 
     # Set attributes in object (from params hash).
     def set_attributes_from_params
       param_key = crud_options[:class_name].parameterize(separator: "_")
-      object.attributes = params.require(param_key).permit(*crud_options[:attributes])
+      object.attributes = params.require(param_key).permit(*crud_options[:attributes][:permit])
     end
 
     # Set attributes in object (from session hash).
     def set_attributes_from_session
       values = session.delete("#{controller_path}##{SESSION_KEY.fetch(action_name)}")
-      object.attributes = values&.slice(*crud_options[:attributes]) || {}
+      object.attributes = values&.slice(*crud_options[:attributes][:slice]) || {}
     end
 
     # Store received data & object errors into session.
