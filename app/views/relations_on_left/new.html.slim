@@ -1,0 +1,46 @@
+h1 New relation
+
+ruby:
+  form_url = project_requirement_left_index_path(project_id: @project.id, id: @requirement.id)
+
+  available_kinds = @requirement_kinds_for_relation_kinds.keys
+  kinds = []
+  AppConfig.requirement_relations.each_pair do |k, v|
+    kinds << [v.comment, k] if available_kinds.include?(k)
+  end
+
+  req_kinds = AppConfig.requirements.to_h { |k, v| [k.to_s, v.comment] }
+
+= form_for(@relation, url: form_url) do |f|
+  table style="border-collapse: collapse"
+    tbody
+      tr
+        td = @requirement.title
+      tr
+        td = f.select(:kind, kinds)
+      tr
+        td = f.select(:right_id, [])
+    tfoot
+      tr
+        td colspan="2" = f.submit("Create record")
+
+template#tpl_other_requirements
+  - @other_requirements.each do |kind, requirements|
+    - options = grouped_options_for_select([[req_kinds[kind], requirements]], @relation.right_id)
+    = select_tag("tpl_#{kind}", options)
+
+javascript:
+  function showRequirements(rel_kind) {
+    const select_node = document.querySelector("#goals_requirement_relation_right_id")
+    const tpl = document.querySelector("#tpl_other_requirements")
+    select_node.innerHTML = ""
+    requirementKindsForRelationKinds[rel_kind].forEach((req_kind) => {
+      const options = tpl.content.querySelector(`#tpl_${req_kind}`).childNodes
+      options.forEach((el) => select_node.appendChild(el.cloneNode(true)))
+    })
+  }
+
+  const requirementKindsForRelationKinds = #{@requirement_kinds_for_relation_kinds.to_json.html_safe}
+  const selectKind = document.querySelector("#goals_requirement_relation_kind")
+  showRequirements(selectKind.value)
+  selectKind.addEventListener("input", (ev) => showRequirements(ev.target.value))

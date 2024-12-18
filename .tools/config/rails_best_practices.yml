@@ -67,11 +67,16 @@ RemoveTrailingWhitespaceCheck: { }
 
 # Options and default values:
 #   except_methods: [], Array[String]
-# RemoveUnusedMethodsInControllersCheck: { except_methods: [] }
+RemoveUnusedMethodsInControllersCheck:
+  except_methods: []
+  ignored_files:
+    - app/controllers/relations_on_left_controller.rb
+    - app/controllers/relations_on_right_controller.rb
+    - app/controllers/requirements_controller.rb
 
-# RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
+RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
 
-# RemoveUnusedMethodsInModelsCheck: { except_methods: [] }
+RemoveUnusedMethodsInModelsCheck: { except_methods: [] }
 
 # Options and default values:
 #   attribute_assignment_count: 2

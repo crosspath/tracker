@@ -7,5 +7,5 @@ class Goals::RequirementRelation < Base::Model
     belongs_to :right, inverse_of: "relations_on_right"
   end
 
-  validates :kind, inclusion: {in: %w[starts_after includes]}
+  validates :kind, inclusion: {in: AppConfig.requirement_relations.members.map(&:to_s)}
 end

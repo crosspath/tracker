@@ -1,27 +1,7 @@
 h1 Requirement
 = render "form"
 
-- rel_kinds = AppConfig.requirement_relations.members
-
 h2 Relations
-h3 = Goals::RequirementRelation.column_comments[:left_id]
-- @relations_on_left.group_by(&:kind).each do |kind, relations|
-  - has_key = rel_kinds.include?(kind.to_sym)
-  h4 = has_key ? AppConfig.requirement_relations[kind] : kind
-  - relations.each do |rel|
-    p
-      = link_to(project_requirement_path(project_id: @project.id, id: rel.right_id)) do
-        = rel.right&.title || "~"
-- url = new_project_requirements_relation_path(project_id: @project.id, left_id: @requirement.id)
-p = link_to("+ relation", url)
-
-h3 = Goals::RequirementRelation.column_comments[:right_id]
-- @relations_on_right.group_by(&:kind).each do |kind, relations|
-  - has_key = rel_kinds.include?(kind.to_sym)
-  h4 = has_key ? AppConfig.requirement_relations[kind] : kind
-  - relations.each do |rel|
-    p
-      = link_to(project_requirement_path(project_id: @project.id, id: rel.left_id)) do
-        = rel.left&.title || "~"
-- url = new_project_requirements_relation_path(project_id: @project.id, right_id: @requirement.id)
-p = link_to("+ relation", url)
+- ref_ids = {project_id: @project.id, requirement_id: @requirement.id}
+= render "relations", direction: "left", relations: @relations_on_left, **ref_ids
+= render "relations", direction: "right", relations: @relations_on_right, **ref_ids
