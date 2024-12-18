@@ -20,23 +20,26 @@ ruby:
       tr
         th = @requirement.column_comments[:description]
         td = f.text_area(:description)
-      = f.fields_for(:optional_data) do |ff|
-        - AppConfig.requirements.each_pair do |kind, options| # rubocop:disable Lint/UnusedBlockArgument
-          - options.optional_data.each_pair do |attr_name, attr_options|
-            tr data-optional="" data-kind=kind style="display: none"
-              th = attr_options.comment
-              td
-                - case attr_options.type
-                - when "string"
-                  = ff.text_field(attr_name)
-                - when "float"
-                  ruby:
-                    input_options = {
-                      min: attr_options.min_value,
-                      max: attr_options.max_value,
-                      step: attr_options.step,
-                    }
-                  = ff.number_field(attr_name, input_options.compact_blank)
+      = f.fields_for(:optional_data) do |fo|
+        - AppConfig.requirements.each_pair do |kind, options|
+          = fo.fields_for(kind, @requirement.optional_data) do |ff|
+            - options.optional_data.each_pair do |attr_name, attr_options|
+              - value = @requirement.optional_data[attr_name.to_s]
+              tr data-optional="" data-kind=kind style="display: none"
+                th = attr_options.comment
+                td
+                  - case attr_options.type
+                  - when "string"
+                    = ff.text_field(attr_name, value:)
+                  - when "float"
+                    ruby:
+                      input_options = {
+                        min: attr_options.min_value,
+                        max: attr_options.max_value,
+                        step: attr_options.step,
+                        value:,
+                      }
+                    = ff.number_field(attr_name, input_options.compact_blank)
     tfoot
       tr
         td colspan="2" = f.submit(submit_label)

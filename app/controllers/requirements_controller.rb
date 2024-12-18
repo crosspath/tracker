@@ -41,4 +41,10 @@ class RequirementsController < ApplicationController
   def init_object
     self.object = @project.requirements.new
   end
+
+  # Set attributes in object (from params hash).
+  def set_attributes_from_params
+    super
+    object.optional_data = object.optional_data[object.kind] || {}
+  end
 end
