@@ -8,5 +8,7 @@ class Work::Worker < Base::Model
     has_many :reviews, class_name: "Work::Review", dependent: :delete_all
   end
 
+  validates :title, presence: true
+
   before_validation { self.position ||= (Work::Worker.maximum(:position) || -1) + 1 }
 end

@@ -8,7 +8,7 @@ ruby:
   submit_label = @requirement.persisted? ? "Update record" : "Create record"
 
 = form_for(@requirement, url: form_url) do |f|
-  table style="border-collapse: collapse"
+  table style="border-collapse: collapse; min-width: 100%"
     tbody
       - kinds = AppConfig.requirements.to_h { |k, v| [v.comment, k] }
       tr
@@ -16,10 +16,10 @@ ruby:
         td = f.select(:kind, kinds)
       tr
         th = @requirement.column_comments[:title]
-        td = f.text_field(:title)
+        td = f.text_field(:title, style: "min-width: calc(100% - 8px)")
       tr
         th = @requirement.column_comments[:description]
-        td = f.text_area(:description)
+        td = f.text_area(:description, style: "min-height: 40px; min-width: calc(100% - 8px)")
       = f.fields_for(:optional_data) do |fo|
         - AppConfig.requirements.each_pair do |kind, options|
           = fo.fields_for(kind, @requirement.optional_data) do |ff|
@@ -43,6 +43,9 @@ ruby:
     tfoot
       tr
         td colspan="2" = f.submit(submit_label)
+
+css:
+  th {width: 12em}
 
 javascript:
   function showOptionalData(kind) {

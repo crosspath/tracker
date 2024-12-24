@@ -60,6 +60,7 @@ class RelationsOnRightController < ApplicationController
     @project.requirements
       .where(kind: @requirement_kinds_for_relation_kinds.values.flatten.uniq)
       .where.not(id: @requirement.id)
+      .order(:position)
       .pluck(:title, :kind, :id)
       .group_by(&:second)
   end

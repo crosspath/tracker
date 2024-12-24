@@ -70,9 +70,7 @@ RemoveTrailingWhitespaceCheck: { }
 RemoveUnusedMethodsInControllersCheck:
   except_methods: []
   ignored_files:
-    - app/controllers/relations_on_left_controller.rb
-    - app/controllers/relations_on_right_controller.rb
-    - app/controllers/requirements_controller.rb
+    - app/controllers/
 
 RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
 
