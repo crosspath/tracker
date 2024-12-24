@@ -130,16 +130,21 @@ module Crud
     module CreateUpdate
       private
 
+      # @return [Hash-like]
+      def permitted_params
+        param_key = crud_options[:class_name].underscore.gsub("/", "_")
+        params.require(param_key).permit(*crud_options[:attributes][:permit])
+      end
+
       # Set attributes in object (from params hash).
       def set_attributes_from_params
-        param_key = crud_options[:class_name].underscore.gsub("/", "_")
-        object.attributes = params.require(param_key).permit(*crud_options[:attributes][:permit])
+        object.attributes = permitted_params
       end
 
       # Store received data & object errors into session.
       def store_errors_and_params
         flash[:alert] = "Error(s) occured: #{object.errors.to_hash.to_json}"
-        session["#{controller_path}##{action_name}"] = params.permit!.to_h
+        session["#{controller_path}##{action_name}"] = permitted_params.to_h
       end
     end
 
