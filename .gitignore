@@ -2,8 +2,10 @@
 .annotate_solargraph_schema
 /.bundle/*
 !/.bundle/config.*
+/.yardoc
 /config/master.key
 /config/settings.local.yml
+/doc
 /log/*
 /public/assets
 /storage/*
