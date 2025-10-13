@@ -13,7 +13,7 @@ Rails.application.configure do
   config.consider_all_requests_local = false
   config.eager_load = true
   config.enable_reloading = false
-  config.force_ssl = true
+  config.force_ssl = AppConfig.dig(:action_dispatch, :force_ssl) || false
 
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
@@ -22,7 +22,7 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   config.i18n.fallbacks = true
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+  config.log_level = AppConfig.dig(:active_support, :log_level) || :info
   config.log_tags = [:request_id]
   config.logger = ActiveSupport::TaggedLogging.logger($stdout)
   config.public_file_server.headers = {"cache-control" => "public, max-age=#{1.year.to_i}"}

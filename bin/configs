@@ -6,15 +6,18 @@ require "fileutils"
 # path to your application root.
 APP_ROOT = File.expand_path("..", __dir__).freeze
 
-files = [
-  {source: ".env.template", destination: ".env.local"},
-]
+template = <<~YAML
+  active_record:
+    url: postgres://myuser:mypass@localhost/somedatabase
+  authentication:
+    myusername: mypassword
+YAML
 
 FileUtils.chdir(APP_ROOT) do
-  files.each do |file|
-    unless File.exist?(file[:destination])
-      puts "\n== Creating file #{file[:destination]} =="
-      FileUtils.cp(file[:source], file[:destination])
-    end
+  file = "config/settings/local.yml"
+
+  if !File.exist?(file)
+    puts "\n== Creating file #{file} =="
+    File.write(file, template)
   end
 end
