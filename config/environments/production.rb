@@ -6,9 +6,10 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   config.active_record.attributes_for_inspect = [:id]
   config.active_record.dump_schema_after_migration = false
+  config.active_record.strict_loading_by_default = true
   config.active_support.report_deprecations = false
   # config.asset_host = "http://assets.example.com"
-  config.assume_ssl = true
+  # config.assume_ssl = true
   # config.cache_store = :mem_cache_store
   config.consider_all_requests_local = false
   config.eager_load = true
@@ -24,8 +25,10 @@ Rails.application.configure do
   config.i18n.fallbacks = true
   config.log_level = AppConfig.dig(:active_support, :log_level) || :info
   config.log_tags = [:request_id]
-  config.logger = ActiveSupport::TaggedLogging.logger($stdout)
+  # config.logger = ActiveSupport::TaggedLogging.logger($stdout)
+  config.logger = nil # Log to file "log/production.log".
   config.public_file_server.headers = {"cache-control" => "public, max-age=#{1.year.to_i}"}
   config.silence_healthcheck_path = "/up"
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = {hsts: false}
 end
