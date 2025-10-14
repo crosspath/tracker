@@ -3,7 +3,7 @@
 # Manage payouts list.
 class PayoutsController < ApplicationController
   crud do
-    attributes %w[money paid_at worker_id work_log_ids]
+    attributes(%w[money paid_at worker_id] + [log_ids: []])
     class_name "Finance::Payout"
     item_name :payout
     index_path { payouts_path }
@@ -11,13 +11,17 @@ class PayoutsController < ApplicationController
     show_path { payout_path(@payout) }
   end
 
-  # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :fetch_records_for_associations, only: %i[new show]
-  # rubocop:enable Rails/LexicallyScopedActionFilter
 
   # List records of payouts.
   def index
     @payouts = Finance::Payout.includes(:worker).order(created_at: :desc, worker_id: :asc)
+  end
+
+  # Show form for new record.
+  def new
+    super
+    @work_log_ids = []
   end
 
   # Show form for existing record.
@@ -34,7 +38,7 @@ class PayoutsController < ApplicationController
 
     @work_logs =
       Work::Log
-        .includes(:worker, :requirement)
+        .includes(:worker, requirement: :project)
         .order("work_workers.position": :asc, "work_workers.title": :asc, kind: :asc)
   end
 end

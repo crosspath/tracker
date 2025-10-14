@@ -7,6 +7,7 @@
 / work_log_ids [Array<Integer>, nil]
 
 ruby:
+  form ||= nil
   show_payout = true if !local_assigns.key?(:show_payout)
   show_requirement = true if !local_assigns.key?(:show_requirement)
   show_worker = true if !local_assigns.key?(:show_worker)
@@ -35,12 +36,21 @@ table
       tr
         td
           - if form
-            => form.check_box("work_log_ids[]", checked: work_log_ids.include?(log.id), include_hidden: false)
+            => form.check_box( \
+              "log_ids][",
+              {checked: work_log_ids.include?(log.id), include_hidden: false},
+              log.id \
+            )
           = link_to(log.id, work_log_path(log.id))
         - if show_worker
           td = link_to(log.worker.title, worker_path(log.worker_id))
         - if show_requirement
-          td = link_to(log.requirement.title, requirement_path(log.requirement_id))
+          - project_id = log.requirement.project.id
+          td
+            = link_to( \
+              log.requirement.title,
+              project_requirement_path(project_id:, id: log.requirement_id) \
+            )
         td = log.started_at&.iso8601
         td = log.ended_at&.iso8601
         td = AppConfig.work_logs[log.kind].comment
@@ -48,6 +58,6 @@ table
         - if show_payout
           td
             - if log.payout_id
-              = link_to(log.payout.title, payout_path(log.payout_id))
+              = link_to(log.payout.money, payout_path(log.payout_id))
             - else
               | None

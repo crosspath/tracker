@@ -1,4 +1,4 @@
-- form_url = @work_log.persisted? ? payout_path(@work_log) : work_logs_path
+- form_url = @work_log.persisted? ? work_log_path(@work_log) : work_logs_path
 - submit_label = @work_log.persisted? ? "Update record" : "Create record"
 
 - workers_options = options_from_collection_for_select(@workers, :id, :title, @work_log.worker_id)
