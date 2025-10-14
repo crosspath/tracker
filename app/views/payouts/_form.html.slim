@@ -1,0 +1,22 @@
+- form_url = @payout.persisted? ? payout_path(@payout) : payouts_path
+- submit_label = @payout.persisted? ? "Update record" : "Create record"
+- workers_options = options_from_collection_for_select(@workers, :id, :title, @payout.worker_id)
+
+= form_for(@payout, url: form_url) do |f|
+  table style="border-collapse: collapse"
+    tbody
+      tr
+        th = @payout.column_comments[:worker_id]
+        td = f.select(:worker_id, workers_options)
+      tr
+        th = @payout.column_comments[:money]
+        td = f.number_field(:money, min: 0, step: 0.01)
+      tr
+        th = @payout.column_comments[:paid_at]
+        td = f.date_field(:paid_at, min: Date.new(2024, 9, 1))
+    tfoot
+      tr
+        td colspan="2" = f.submit(submit_label)
+
+  h3 Related work logs
+  = render "work/logs/items", logs: @work_logs, show_payout: false, form: f, work_log_ids: @work_log_ids

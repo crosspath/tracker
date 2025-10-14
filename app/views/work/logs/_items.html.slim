@@ -1,0 +1,53 @@
+/ LOCALS:
+/ form [ActionView::Helpers::FormBuilder, nil]
+/ logs [Array-like<Work::Log>]
+/ show_payout [boolean, nil]
+/ show_requirement [boolean, nil]
+/ show_worker [boolean, nil]
+/ work_log_ids [Array<Integer>, nil]
+
+ruby:
+  show_payout = true if !local_assigns.key?(:show_payout)
+  show_requirement = true if !local_assigns.key?(:show_requirement)
+  show_worker = true if !local_assigns.key?(:show_worker)
+  columns_count =
+    5 + (show_payout ? 1 : 0) + (show_requirement ? 1 : 0) + (show_worker ? 1 : 0)
+  work_log_ids = [] if !local_assigns.key?(:work_log_ids)
+
+table
+  thead
+    th #
+    - if show_worker
+      th = Work::Log.column_comments[:worker_id]
+    - if show_requirement
+      th = Work::Log.column_comments[:requirement_id]
+    th = Work::Log.column_comments[:started_at]
+    th = Work::Log.column_comments[:ended_at]
+    th = Work::Log.column_comments[:kind]
+    th = Work::Log.column_comments[:planned_duration]
+    - if show_payout
+      th = Work::Log.column_comments[:payout_id]
+  tbody
+    - if logs.empty?
+      tr
+        td colspan=columns_count No data
+    - logs.each do |log|
+      tr
+        td
+          - if form
+            => form.check_box("work_log_ids[]", checked: work_log_ids.include?(log.id), include_hidden: false)
+          = link_to(log.id, work_log_path(log.id))
+        - if show_worker
+          td = link_to(log.worker.title, worker_path(log.worker_id))
+        - if show_requirement
+          td = link_to(log.requirement.title, requirement_path(log.requirement_id))
+        td = log.started_at&.iso8601
+        td = log.ended_at&.iso8601
+        td = AppConfig.work_logs[log.kind].comment
+        td = log.planned_duration
+        - if show_payout
+          td
+            - if log.payout_id
+              = link_to(log.payout.title, payout_path(log.payout_id))
+            - else
+              | None

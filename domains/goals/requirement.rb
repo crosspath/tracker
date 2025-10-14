@@ -8,7 +8,6 @@ class Goals::Requirement < Base::Model
 
   with_options inverse_of: "requirement" do
     has_many :logs, class_name: "Work::Log", dependent: :delete_all
-    has_many :reviews, class_name: "Work::Review", dependent: :delete_all
   end
 
   with_options class_name: "Goals::RequirementRelation", dependent: :delete_all do

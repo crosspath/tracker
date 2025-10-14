@@ -1,0 +1,22 @@
+h1 Payouts
+table style="border: 0; border-collapse: collapse;"
+  thead
+    tr
+      th #
+      th = Finance::Payout.column_comments[:worker_id]
+      th = Finance::Payout.column_comments[:money]
+      th = Finance::Payout.column_comments[:created_at]
+      th = Finance::Payout.column_comments[:paid_at]
+  tbody
+    - if @payouts.empty?
+      tr
+        td colspan="5" style="text-align: center" No data
+    - @payouts.each do |payout|
+      tr
+        td = link_to(payout.id, payout_path(payout))
+        td = link_to(payout.worker.title, worker_path(payout.worker_id))
+        td = payout.money
+        td = payout.created_at.to_date.iso8601
+        td = payout.paid_at&.iso8601
+
+p = link_to("+ payout", new_payout_path)

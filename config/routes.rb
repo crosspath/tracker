@@ -27,6 +27,5 @@ Rails.application.routes.draw do
 
   namespace "work" do
     resources "logs", only: %i[create destroy index new show update]
-    resources "reviews", only: %i[create destroy index new show update]
   end
 end

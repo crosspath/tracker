@@ -10,14 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_15_182423) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_13_114951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "finance_payouts", force: :cascade do |t|
     t.bigint "worker_id", null: false, comment: "Worker"
-    t.decimal "money", precision: 6, null: false, comment: "Amount of money"
+    t.decimal "money", precision: 6, comment: "Amount of money"
     t.date "paid_at", comment: "Paid at"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false, comment: "Created at"
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["worker_id"], name: "index_finance_payouts_on_worker_id"
   end
 
@@ -50,19 +52,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_15_182423) do
     t.date "started_at", comment: "Started at"
     t.date "ended_at", comment: "Ended at"
     t.decimal "planned_duration", precision: 4, scale: 2, null: false, comment: "Planned duration in hours"
-    t.decimal "rate", precision: 5, null: false, comment: "Hour rate"
+    t.bigint "payout_id", comment: "Payout"
+    t.string "kind", null: false, comment: "Type of work log"
+    t.index ["payout_id"], name: "index_work_logs_on_payout_id"
     t.index ["requirement_id"], name: "index_work_logs_on_requirement_id"
     t.index ["worker_id"], name: "index_work_logs_on_worker_id"
-  end
-
-  create_table "work_reviews", force: :cascade do |t|
-    t.bigint "worker_id", null: false, comment: "Worker"
-    t.bigint "requirement_id", null: false, comment: "Requirement"
-    t.date "performed_at", null: false, comment: "Performed at"
-    t.decimal "calculated_duration", precision: 4, scale: 2, null: false, comment: "Calculated duration in hours"
-    t.decimal "rate", precision: 5, null: false, comment: "Hour rate"
-    t.index ["requirement_id"], name: "index_work_reviews_on_requirement_id"
-    t.index ["worker_id"], name: "index_work_reviews_on_worker_id"
   end
 
   create_table "work_workers", force: :cascade do |t|
@@ -76,8 +70,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_15_182423) do
   add_foreign_key "goals_requirement_relations", "goals_requirements", column: "left_id"
   add_foreign_key "goals_requirement_relations", "goals_requirements", column: "right_id"
   add_foreign_key "goals_requirements", "goals_projects", column: "project_id"
+  add_foreign_key "work_logs", "finance_payouts", column: "payout_id"
   add_foreign_key "work_logs", "goals_requirements", column: "requirement_id"
   add_foreign_key "work_logs", "work_workers", column: "worker_id"
-  add_foreign_key "work_reviews", "goals_requirements", column: "requirement_id"
-  add_foreign_key "work_reviews", "work_workers", column: "worker_id"
 end

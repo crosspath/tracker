@@ -50,3 +50,10 @@ requirement_relations:
     requirement_kinds:
       - {left: feature, right: user_story}
       - {left: user_story, right: task}
+work_logs:
+  executor:
+    comment: "Executor"
+  reviewer:
+    comment: "Reviewer"
+  manager:
+    comment: "Manager"
