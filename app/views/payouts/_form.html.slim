@@ -9,6 +9,9 @@
         th = @payout.column_comments[:worker_id]
         td = f.select(:worker_id, workers_options)
       tr
+        th = @payout.column_comments[:rate]
+        td = f.number_field(:rate, max: 99_999, min: 0)
+      tr
         th = @payout.column_comments[:money]
         td = f.number_field(:money, min: 0, step: 0.01)
       tr
@@ -17,6 +20,17 @@
     tfoot
       tr
         td colspan="2" = f.submit(submit_label)
+
+  - if @payout.persisted?
+    h3 Calculated values
+    - duration = @work_logs.where(payout_id: @payout.id).sum(:planned_duration)
+    table style="border-collapse: collapse"
+      tr
+        th style="text-align: left; padding-right: 1em;" Duration in hours
+        td = duration
+      tr
+        th style="text-align: left; padding-right: 1em;" Amount of money
+        td = duration * @payout.rate
 
   h3 Related work logs
   = render "work/logs/items", logs: @work_logs, show_payout: false, form: f, work_log_ids: @work_log_ids

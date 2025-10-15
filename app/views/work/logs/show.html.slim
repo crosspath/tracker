@@ -1,2 +1,6 @@
 h1 Work log
-= render "form"
+= render "form", work_log: @work_log
+
+- if @copy_presenter&.copy
+  h2 Copy work log
+  = render "form", copy_presenter: @copy_presenter, work_log: @copy_presenter.copy

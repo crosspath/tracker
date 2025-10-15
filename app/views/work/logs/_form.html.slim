@@ -1,31 +1,50 @@
-- form_url = @work_log.persisted? ? work_log_path(@work_log) : work_logs_path
-- submit_label = @work_log.persisted? ? "Update record" : "Create record"
+/ LOCALS:
+/ copy_presenter [Work::Services::Logs::Copy, nil] Optional
+/ work_log [Work::Log] Required
 
-- workers_options = options_from_collection_for_select(@workers, :id, :title, @work_log.worker_id)
-- requirements_options = @requirements.map { |req| ["#{req.project.title} - #{req.title}", req.id] }
-- kinds = AppConfig.work_logs.to_h { |k, v| [v.comment, k] }
+ruby:
+  copy_presenter = nil if !local_assigns.key?(:copy_presenter)
 
-= form_for(@work_log, url: form_url) do |f|
+  form_url = work_log.persisted? ? work_log_path(work_log) : work_logs_path
+  submit_label =
+    if work_log.persisted?
+      "Update record"
+    else
+      copy_presenter ? "Create copy" : "Create record"
+    end
+
+= form_for(work_log, url: form_url) do |f|
+  - if copy_presenter
+    = f.hidden_field(:copy_from, value: copy_presenter.log.id)
   table style="border-collapse: collapse"
     tbody
-      tr
-        th = @work_log.column_comments[:worker_id]
-        td = f.select(:worker_id, workers_options)
-      tr
-        th = @work_log.column_comments[:requirement_id]
-        td = f.select(:requirement_id, options_for_select(requirements_options, @work_log.requirement_id))
-      tr
-        th = @work_log.column_comments[:started_at]
-        td = f.date_field(:started_at, min: Date.new(2024, 9, 1))
-      tr
-        th = @work_log.column_comments[:ended_at]
-        td = f.date_field(:ended_at, min: Date.new(2024, 9, 1))
-      tr
-        th = @work_log.column_comments[:kind]
-        td = f.select(:kind, kinds)
-      tr
-        th = @work_log.column_comments[:planned_duration]
-        td = f.number_field(:planned_duration, min: 0, step: 0.01)
+      - if copy_presenter.nil? || copy_presenter.visible?(:worker_id)
+        - options = options_from_collection_for_select(@workers, :id, :title, work_log.worker_id)
+        tr
+          th = work_log.column_comments[:worker_id]
+          td = f.select(:worker_id, options)
+      - if copy_presenter.nil? || copy_presenter.visible?(:requirement_id)
+        - options = @requirements.map { |req| ["#{req.project.title} - #{req.title}", req.id] }
+        tr
+          th = work_log.column_comments[:requirement_id]
+          td = f.select(:requirement_id, options_for_select(options, work_log.requirement_id))
+      - if copy_presenter.nil? || copy_presenter.visible?(:started_at)
+        tr
+          th = work_log.column_comments[:started_at]
+          td = f.date_field(:started_at, min: Date.new(2024, 9, 1))
+      - if copy_presenter.nil? || copy_presenter.visible?(:ended_at)
+        tr
+          th = work_log.column_comments[:ended_at]
+          td = f.date_field(:ended_at, min: Date.new(2024, 9, 1))
+      - if copy_presenter.nil? || copy_presenter.visible?(:kind)
+        - kinds = AppConfig.work_logs.to_h { |k, v| [v.comment, k] }
+        tr
+          th = work_log.column_comments[:kind]
+          td = f.select(:kind, kinds)
+      - if copy_presenter.nil? || copy_presenter.visible?(:planned_duration)
+        tr
+          th = work_log.column_comments[:planned_duration]
+          td = f.number_field(:planned_duration, min: 0, step: 0.005)
     tfoot
       tr
         td colspan="2" = f.submit(submit_label)

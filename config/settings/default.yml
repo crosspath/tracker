@@ -53,7 +53,22 @@ requirement_relations:
 work_logs:
   executor:
     comment: "Executor"
-  reviewer:
-    comment: "Reviewer"
+    copy:
+      ended_at: {value: same, visible: false}
+      kind: {value: ~, visible: true}
+      planned_duration:
+        value:
+          - kind: manager
+            multiply: 0.3
+          - kind: reviewer
+            multiply: 0.05
+        visible: false
+      requirement_id: {value: same, visible: false}
+      started_at: {value: same, visible: false}
+      worker_id: {value: ~, visible: true}
   manager:
     comment: "Manager"
+    copy: ~
+  reviewer:
+    comment: "Reviewer"
+    copy: ~

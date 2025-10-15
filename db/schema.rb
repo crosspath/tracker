@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_13_114951) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_15_201201) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "finance_payouts", force: :cascade do |t|
     t.bigint "worker_id", null: false, comment: "Worker"
-    t.decimal "money", precision: 6, comment: "Amount of money"
+    t.decimal "money", precision: 8, scale: 2, comment: "Amount of money"
     t.date "paid_at", comment: "Paid at"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false, comment: "Created at"
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.decimal "rate", precision: 5, default: "0", null: false, comment: "Hour rate"
     t.index ["worker_id"], name: "index_finance_payouts_on_worker_id"
   end
 
@@ -51,7 +52,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_13_114951) do
     t.bigint "requirement_id", null: false, comment: "Requirement"
     t.date "started_at", comment: "Started at"
     t.date "ended_at", comment: "Ended at"
-    t.decimal "planned_duration", precision: 4, scale: 2, null: false, comment: "Planned duration in hours"
+    t.decimal "planned_duration", precision: 5, scale: 3, null: false, comment: "Planned duration in hours"
     t.bigint "payout_id", comment: "Payout"
     t.string "kind", null: false, comment: "Type of work log"
     t.index ["payout_id"], name: "index_work_logs_on_payout_id"

@@ -3,7 +3,7 @@
 # Manage payouts list.
 class PayoutsController < ApplicationController
   crud do
-    attributes(%w[money paid_at worker_id] + [log_ids: []])
+    attributes(%w[money paid_at rate worker_id] + [log_ids: []])
     class_name "Finance::Payout"
     item_name :payout
     index_path { payouts_path }
@@ -36,9 +36,7 @@ class PayoutsController < ApplicationController
   def fetch_records_for_associations
     @workers = Work::Worker.order(:position, :title)
 
-    @work_logs =
-      Work::Log
-        .includes(:worker, requirement: :project)
-        .order("work_workers.position": :asc, "work_workers.title": :asc, kind: :asc)
+    payout = @payout.persisted? ? @payout : nil
+    @work_logs = Work::Queries::Logs::ForPayouts.new(payout:).call
   end
 end
