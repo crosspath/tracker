@@ -12,7 +12,6 @@ class Work::LogsController < ApplicationController
   end
 
   # rubocop:disable Rails/LexicallyScopedActionFilter
-  before_action :fetch_records_for_associations, only: %i[new show]
   before_action :init_copy_service, only: :show
   # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -29,14 +28,28 @@ class Work::LogsController < ApplicationController
 
   # List records of work logs.
   def index
+    @filter = Work::Log.new(kind: nil, **filter_params)
     @work_logs =
       Work::Log
         .includes(:payout, :requirement, :worker)
         .joins(:worker)
         .order(requirement_id: :desc, kind: :asc, "work_workers.position": :asc)
+
+    FILTER_ATTRIBUTES.each do |k|
+      @work_logs = @work_logs.where(k => @filter[k]) if @filter[k]
+    end
+  end
+
+  # Show form for new record.
+  def new
+    @work_log = Work::Log.new(kind: nil, **filter_params)
   end
 
   private
+
+  FILTER_ATTRIBUTES = %i[kind requirement_id worker_id].freeze
+
+  private_constant :FILTER_ATTRIBUTES
 
   # @param original [Work::Log]
   # @return [void]
@@ -49,14 +62,9 @@ class Work::LogsController < ApplicationController
     redirect_to_work_log(original.id)
   end
 
-  # Fetch records required for forms.
-  def fetch_records_for_associations
-    @requirements =
-      Goals::Requirement
-        .includes(:project)
-        .where(kind: requirement_kinds_as_unit_of_work)
-        .order(:project_id, :kind, :position)
-    @workers = Work::Worker.order(:position, :title)
+  # @return [Hash-like]
+  def filter_params
+    params.key?(:work_log) ? params.expect(work_log: FILTER_ATTRIBUTES) : {}
   end
 
   # @param id [Integer]
@@ -78,12 +86,6 @@ class Work::LogsController < ApplicationController
   # @return [void]
   def redirect_to_work_log(id)
     redirect_to(work_log_path(id))
-  end
-
-  # @return [Array<String>]
-  def requirement_kinds_as_unit_of_work
-    items = AppConfig.requirements
-    items.members.select { |k| items[k].unit_of_work }
   end
 
   # @return [Hash]

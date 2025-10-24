@@ -1,6 +1,6 @@
 h1 Worker
 = render "form"
 
-h2 = link_to("Payouts", payouts_path(worker_id: @worker.id))
+h2 = link_to("Payouts", payouts_path(payout: {worker_id: @worker.id}))
 
-h2 = link_to("Work logs", work_logs_path(worker_id: @worker.id))
+h2 = link_to("Work logs", work_logs_path(work_log: {worker_id: @worker.id}))

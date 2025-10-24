@@ -14,20 +14,20 @@ ruby:
     end
 
 = form_for(work_log, url: form_url) do |f|
+  - form_presenter = Work::Services::Logs::FormPresenter.new(form: f)
+  - Rails.logger.error(self.class.ancestors - Class.ancestors)
   - if copy_presenter
     = f.hidden_field(:copy_from, value: copy_presenter.log.id)
   table style="border-collapse: collapse"
     tbody
       - if copy_presenter.nil? || copy_presenter.visible?(:worker_id)
-        - options = options_from_collection_for_select(@workers, :id, :title, work_log.worker_id)
         tr
           th = work_log.column_comments[:worker_id]
-          td = f.select(:worker_id, options)
+          td = form_presenter.select_worker
       - if copy_presenter.nil? || copy_presenter.visible?(:requirement_id)
-        - options = @requirements.map { |req| ["#{req.project.title} - #{req.title}", req.id] }
         tr
           th = work_log.column_comments[:requirement_id]
-          td = f.select(:requirement_id, options_for_select(options, work_log.requirement_id))
+          td = form_presenter.select_requirement
       - if copy_presenter.nil? || copy_presenter.visible?(:started_at)
         tr
           th = work_log.column_comments[:started_at]
@@ -37,10 +37,9 @@ ruby:
           th = work_log.column_comments[:ended_at]
           td = f.date_field(:ended_at, min: Date.new(2024, 9, 1))
       - if copy_presenter.nil? || copy_presenter.visible?(:kind)
-        - kinds = AppConfig.work_logs.to_h { |k, v| [v.comment, k] }
         tr
           th = work_log.column_comments[:kind]
-          td = f.select(:kind, kinds)
+          td = form_presenter.select_kind
       - if copy_presenter.nil? || copy_presenter.visible?(:planned_duration)
         tr
           th = work_log.column_comments[:planned_duration]

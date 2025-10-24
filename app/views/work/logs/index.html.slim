@@ -1,4 +1,17 @@
 h1 Work logs
+= form_with(model: @filter, url: work_logs_path, method: :get) do |f|
+  - form_presenter = Work::Services::Logs::FormPresenter.new(form: f)
+  = fieldset_tag("Filters") do
+    .field
+      = f.label(:worker_id, Work::Log.column_comments[:worker_id])
+      = form_presenter.select_worker(include_blank: "---")
+    .field
+      = f.label(:requirement_id, Work::Log.column_comments[:requirement_id])
+      = form_presenter.select_requirement(include_blank: "---")
+    .field
+      = f.label(:kind, Work::Log.column_comments[:kind])
+      = form_presenter.select_kind(include_blank: "---")
+    = f.submit("Apply")
 = render "work/logs/items", logs: @work_logs
 
 p = link_to("+ work log", new_work_log_path)
