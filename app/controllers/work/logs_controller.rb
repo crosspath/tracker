@@ -2,8 +2,12 @@
 
 # Manage work logs.
 class Work::LogsController < ApplicationController
+  ALLOWED_ATTRIBUTES = %w[ended_at kind planned_duration requirement_id started_at worker_id].freeze
+
+  private_constant :ALLOWED_ATTRIBUTES
+
   crud do
-    attributes %w[ended_at kind planned_duration requirement_id started_at worker_id]
+    attributes ALLOWED_ATTRIBUTES
     class_name "Work::Log"
     item_name :work_log
     index_path { work_logs_path }
@@ -90,6 +94,6 @@ class Work::LogsController < ApplicationController
 
   # @return [Hash]
   def values_for_new_copy
-    params.require(:work_log).permit!.to_hash.symbolize_keys
+    params.require(:work_log).permit(*ALLOWED_ATTRIBUTES).to_hash.symbolize_keys
   end
 end

@@ -61,6 +61,8 @@ work_logs:
       kind: {value: ~, visible: true}
       planned_duration:
         value:
+          - executor: manager
+            multiply: 1
           - kind: manager
             multiply: 0.3
           - kind: reviewer
