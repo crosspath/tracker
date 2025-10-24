@@ -15,7 +15,9 @@ class PayoutsController < ApplicationController
 
   # List records of payouts.
   def index
+    @filter = Finance::Payout.new(filter_params)
     @payouts = Finance::Payout.includes(:worker).order(created_at: :desc, worker_id: :asc)
+    @payouts = @payouts.where(worker_id: @filter.worker_id) if @filter.worker_id
   end
 
   # Show form for new record.
@@ -32,11 +34,20 @@ class PayoutsController < ApplicationController
 
   private
 
+  FILTER_ATTRIBUTES = [:worker_id].freeze
+
+  private_constant :FILTER_ATTRIBUTES
+
   # Fetch records required for forms.
   def fetch_records_for_associations
     @workers = Work::Worker.order(:position, :title)
 
     payout = @payout.persisted? ? @payout : nil
     @work_logs = Work::Queries::Logs::ForPayouts.new(payout:).call
+  end
+
+  # @return [Hash-like]
+  def filter_params
+    params.key?(:payout) ? params.expect(payout: FILTER_ATTRIBUTES) : {}
   end
 end

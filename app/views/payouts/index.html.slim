@@ -1,4 +1,11 @@
 h1 Payouts
+= form_with(model: @filter, url: payouts_path, method: :get) do |f|
+  - form_presenter = Work::Services::Logs::FormPresenter.new(form: f)
+  = fieldset_tag("Filters") do
+    .field
+      = f.label(:worker_id, Work::Log.column_comments[:worker_id])
+      = form_presenter.select_worker(include_blank: "---")
+    = f.submit("Apply")
 table style="border: 0; border-collapse: collapse;"
   thead
     tr
