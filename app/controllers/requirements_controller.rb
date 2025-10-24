@@ -23,6 +23,12 @@ class RequirementsController < ApplicationController
     super
     @relations_on_left = @requirement.relations_on_left.includes(:right)
     @relations_on_right = @requirement.relations_on_right.includes(:left)
+    @work_logs =
+      Work::Log
+        .includes(:payout, :worker)
+        .joins(:worker)
+        .where(requirement_id: @requirement.id)
+        .order(kind: :asc, "work_workers.position": :asc)
   end
 
   private

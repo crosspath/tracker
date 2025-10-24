@@ -1,10 +1,21 @@
 h1 Requirements
-- req_kinds = AppConfig.requirements.members
 - @requirements.group_by(&:kind).each do |kind, requirements|
-  - has_key = req_kinds.include?(kind.to_sym)
-  h3
-    => has_key ? AppConfig.requirements[kind].comment : kind
-    = "(total: #{requirements.size})"
-  - requirements.each do |req|
-    p = link_to(req.title, project_requirement_path(project_id: @project.id, id: req.id))
+  - table_presenter = Goals::Services::Requirements::TablePresenter.new(kind:, requirements:)
+  h3 = "#{table_presenter.kind_comment} (total: #{requirements.size})"
+  - if !requirements.empty?
+    table style="border: 0; border-collapse: collapse;"
+      thead
+        tr
+          th #
+          th = Goals::Requirement.column_comments[:title]
+          - table_presenter.optional_data.each_value do |col|
+            th = col
+      tbody
+        - requirements.each do |req|
+          tr
+            td = link_to(req.id, project_requirement_path(project_id: @project.id, id: req.id))
+            td = req.title
+            - table_presenter.optional_data.each_key do |col|
+              td = req.optional_data[col.to_s]
+
 p = link_to("+ requirement", new_project_requirement_path(project_id: @project.id))

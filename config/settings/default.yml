@@ -19,6 +19,7 @@ requirements:
         nil: false
         default: ""
         comment: "External URL"
+        show_in_table: true
       min_estimated_duration:
         type: float
         nil: true
@@ -27,6 +28,7 @@ requirements:
         max_value: 99.99
         step: 0.01
         comment: "Minimal estimated duration in hours"
+        show_in_table: false
       max_estimated_duration:
         type: float
         nil: true
@@ -35,6 +37,7 @@ requirements:
         max_value: 99.99
         step: 0.01
         comment: "Maximal estimated duration in hours"
+        show_in_table: false
     relations:
       includes: []
     unit_of_work: true

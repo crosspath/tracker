@@ -5,3 +5,8 @@ h2 Relations
 - ref_ids = {project_id: @project.id, requirement_id: @requirement.id}
 = render "relations", direction: "left", relations: @relations_on_left, **ref_ids
 = render "relations", direction: "right", relations: @relations_on_right, **ref_ids
+
+- if AppConfig.requirements[@requirement.kind].unit_of_work
+  h2 Work logs
+  = render "work/logs/items", logs: @work_logs, show_requirement: false
+  p = link_to("+ work log", new_work_log_path(work_log: {requirement_id: @requirement.id}))
