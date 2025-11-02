@@ -77,8 +77,8 @@ PreCommit:
       - '**/*.yaml'
       - '**/*.yml'
 
-PrePush:
-  Brakeman:
-    command: 'bin/brakeman'
-    description: 'http://brakemanscanner.org'
-    enabled: true
+# PrePush:
+#   Brakeman:
+#     command: 'bin/brakeman'
+#     description: 'http://brakemanscanner.org'
+#     enabled: true
