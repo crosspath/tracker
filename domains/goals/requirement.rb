@@ -15,6 +15,8 @@ class Goals::Requirement < Base::Model
     has_many :relations_on_right, inverse_of: "right"
   end
 
+  has_many :payouts, through: :logs, source: :payout
+
   validates :kind, inclusion: {in: AppConfig.requirements.members.map(&:to_s)}
   validates :title, presence: true
 

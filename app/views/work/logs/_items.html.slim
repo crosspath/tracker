@@ -56,8 +56,4 @@ table
         td = AppConfig.work_logs[log.kind].comment
         td = log.planned_duration
         - if show_payout
-          td
-            - if log.payout_id
-              = link_to(log.payout.money, payout_path(log.payout_id))
-            - else
-              | None
+          td = Finance::Services::Payouts::TablePresenter.new(payout: log.payout).link

@@ -15,7 +15,7 @@ class RequirementsController < ApplicationController
 
   # List records of requirements within selected project.
   def index
-    @requirements = @project.requirements.order(:position)
+    @requirements = @project.requirements.order(:kind, :position).includes(logs: :payout)
   end
 
   # Show form for existing record.

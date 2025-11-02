@@ -1,6 +1,7 @@
 h1 Requirements
 - @requirements.group_by(&:kind).each do |kind, requirements|
   - table_presenter = Goals::Services::Requirements::TablePresenter.new(kind:, requirements:)
+  - unit_of_work = AppConfig.requirements[kind].unit_of_work
   h3 = "#{table_presenter.kind_comment} (total: #{requirements.size})"
   - if !requirements.empty?
     table style="border: 0; border-collapse: collapse;"
@@ -10,6 +11,8 @@ h1 Requirements
           th = Goals::Requirement.column_comments[:title]
           - table_presenter.optional_data.each_value do |col|
             th = col
+          - if unit_of_work
+            th Work logs &amp; payouts
       tbody
         - requirements.each do |req|
           tr
@@ -17,5 +20,12 @@ h1 Requirements
             td = req.title
             - table_presenter.optional_data.each_key do |col|
               td = req.optional_data[col.to_s]
+            - if unit_of_work
+              td
+                - req.logs.each_with_index do |log, index|
+                  = content_tag("br") if index > 0
+                  = link_to("#{log.id}, #{log.worker.title}", work_log_path(log.id))
+                  ' :
+                  = Finance::Services::Payouts::TablePresenter.new(payout: log.payout).link
 
 p = link_to("+ requirement", new_project_requirement_path(project_id: @project.id))
