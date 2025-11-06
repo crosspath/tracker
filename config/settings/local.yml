@@ -1,4 +1,0 @@
-active_record:
-  url: postgres://live:123456@localhost/tracker
-authentication:
-  dev: test
