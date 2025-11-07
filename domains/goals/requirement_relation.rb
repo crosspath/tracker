@@ -8,4 +8,6 @@ class Goals::RequirementRelation < Base::Model
   end
 
   validates :kind, inclusion: {in: AppConfig.requirement_relations.members.map(&:to_s)}
+
+  scope :either_side, ->(id) { where("left_id = :id OR right_id = :id", id:) }
 end

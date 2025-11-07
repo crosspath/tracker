@@ -14,12 +14,7 @@ Rails.application.routes.draw do
 
   resources "projects", only: %i[create destroy index new show update] do
     resources "requirements", only: %i[create destroy index new show update] do
-      resources "relations_on_left", only: %i[create new], as: "left" do
-        post "delete", on: :collection
-      end
-      resources "relations_on_right", only: %i[create new], as: "right" do
-        post "delete", on: :collection
-      end
+      resources("relations", only: %i[create new]) { post "delete", on: :collection }
     end
   end
 

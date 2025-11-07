@@ -2,40 +2,19 @@
 / direction: "left" | "right"
 / relations: Array-like<Goals::RequirementRelation>
 / project_id: Integer
-/ requirement_id: Integer
 
 ruby:
   alt_direction = direction == "left" ? "right" : "left"
   rel_kinds = AppConfig.requirement_relations.members
-  project_id_and_requirement_id = {project_id:, requirement_id:}
 
-  delete_url =
-    if direction == "left"
-      delete_project_requirement_left_index_path(project_id_and_requirement_id)
-    else
-      delete_project_requirement_right_index_path(project_id_and_requirement_id)
-    end
-
-  new_url =
-    if direction == "left"
-      new_project_requirement_left_path(project_id_and_requirement_id)
-    else
-      new_project_requirement_right_path(project_id_and_requirement_id)
-    end
-
-h3 = Goals::RequirementRelation.column_comments[:"#{direction}_id"]
 - relations.group_by(&:kind).each do |kind, rels|
   - has_key = rel_kinds.include?(kind.to_sym)
-  h4 = has_key ? AppConfig.requirement_relations[kind].comment : kind
-  - if rels.present?
-    = form_tag(delete_url, method: "post") do
-      - rels.each do |rel|
-        p
-          - alt_record = rel.public_send(alt_direction)
-          => check_box_tag("ids[]", rel.id, id: nil)
-          - if alt_record
-            = link_to(alt_record.title, project_requirement_path(project_id:, id: alt_record.id))
-          - else
-            em not found
-      = submit_tag("Delete selected")
-p = link_to("+ relation", new_url)
+  h3 = has_key ? AppConfig.requirement_relations[kind]["comment_for_#{direction}"] : kind
+  - rels.each do |rel|
+    p
+      - alt_record = rel.public_send(alt_direction)
+      => check_box_tag("ids[]", rel.id, id: nil)
+      - if alt_record
+        = link_to(alt_record.title, project_requirement_path(project_id:, id: alt_record.id))
+      - else
+        em not found

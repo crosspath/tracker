@@ -1,0 +1,75 @@
+h1 New relation
+
+ruby:
+  form_presenter = Goals::Services::Relations::FormPresenter.new(requirement: @requirement).call
+  grouped_req_kinds = form_presenter.grouped_requirement_kinds
+  form_url = project_requirement_relations_path(project_id: @project.id, requirement_id: @requirement.id)
+
+  indexed_kinds = []
+  grouped_req_kinds.relation_kind_comments.each_with_index { |comment, index| indexed_kinds << [comment, index] }
+
+/ Detach visible form elements (rendered within table) from invisible form, because we should change
+/ request attributes depending on selected relation kind.
+= form_for(@relation, url: form_url) do |f|
+  = f.hidden_field(:kind)
+  = f.hidden_field(:left_id)
+  = f.hidden_field(:right_id)
+
+table style="border-collapse: collapse"
+  tbody
+    tr
+      td = @requirement.title
+    tr
+      td = select_tag(:kind, options_for_select(indexed_kinds), id: "select_kind")
+    tr
+      td = select_tag(:right_id, [], id: "select_right")
+  tfoot
+    tr
+      td colspan="2" = submit_tag("Create record", id: "btn_relation")
+
+template#tpl_other_requirements
+  - form_presenter.requirements_for_select.requirement_options.each do |item|
+    - options = grouped_options_for_select([[item[:comment], item[:options]]])
+    = select_tag("tpl_#{item[:kind]}", options)
+
+javascript:
+  function showRequirements(_event) {
+    const kindItem = kindsAttributes[selectKind.value]
+    const tpl = document.querySelector("#tpl_other_requirements")
+
+    selectRight.innerHTML = ""
+
+    kindItem.reqs.forEach((req_kind) => {
+      const options = tpl.content.querySelector(`#tpl_${req_kind}`).childNodes
+      options.forEach((el) => selectRight.appendChild(el.cloneNode(true)))
+    })
+  }
+
+  function submitRelation(_event) {
+    const kindItem = kindsAttributes[selectKind.value]
+    fieldKind.value = kindItem.rel
+
+    if (kindItem.direction == "left") {
+      fieldLeftId.value = currentRequirementId
+      fieldRightId.value = selectRight.value
+    } else {
+      fieldLeftId.value = selectRight.value
+      fieldRightId.value = currentRequirementId
+    }
+
+    formRelation.requestSubmit()
+  }
+
+  const kindsAttributes = #{grouped_req_kinds.relation_kind_attributes.to_json.html_safe}
+  const currentRequirementId = #{@requirement.id}
+  const btnRelation = document.querySelector("#btn_relation")
+  const formRelation = document.querySelector("#new_goals_requirement_relation")
+  const fieldKind = document.querySelector("#goals_requirement_relation_kind")
+  const fieldLeftId = document.querySelector("#goals_requirement_relation_left_id")
+  const fieldRightId = document.querySelector("#goals_requirement_relation_right_id")
+  const selectKind = document.querySelector("#select_kind")
+  const selectRight = document.querySelector("#select_right")
+
+  btnRelation.addEventListener("click", submitRelation)
+  selectKind.addEventListener("input", showRequirements)
+  showRequirements()

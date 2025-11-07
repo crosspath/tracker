@@ -2,9 +2,13 @@ h1 Requirement
 = render "form"
 
 h2 Relations
-- ref_ids = {project_id: @project.id, requirement_id: @requirement.id}
-= render "relations", direction: "left", relations: @relations_on_left, **ref_ids
-= render "relations", direction: "right", relations: @relations_on_right, **ref_ids
+- path_params = {project_id: @project.id, requirement_id: @requirement.id}
+- if @relations_on_left.present? || @relations_on_right.present?
+  = form_tag(delete_project_requirement_relations_path(path_params), method: "post") do
+    = render "relations", direction: "left", relations: @relations_on_left, project_id: @project.id
+    = render "relations", direction: "right", relations: @relations_on_right, project_id: @project.id
+    = submit_tag("Delete selected")
+p = link_to("+ relation", new_project_requirement_relation_path(path_params))
 
 - if AppConfig.requirements[@requirement.kind].unit_of_work
   h2 Work logs

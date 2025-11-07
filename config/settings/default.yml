@@ -43,13 +43,15 @@ requirements:
     unit_of_work: true
 requirement_relations:
   starts_after:
-    comment: "starts after"
+    comment_for_left: "starts after"
+    comment_for_right: "should end before"
     requirement_kinds:
       - {left: feature, right: feature}
       - {left: user_story, right: user_story}
       - {left: task, right: task}
   includes:
-    comment: "includes"
+    comment_for_left: "includes"
+    comment_for_right: "included in"
     requirement_kinds:
       - {left: feature, right: user_story}
       - {left: user_story, right: task}
