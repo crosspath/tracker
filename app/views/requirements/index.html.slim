@@ -22,6 +22,7 @@ h1 Requirements
               td = req.optional_data[col.to_s]
             - if unit_of_work
               td
+                = "None" if req.logs.empty?
                 - req.logs.each_with_index do |log, index|
                   = content_tag("br") if index > 0
                   = link_to("#{log.id}, #{log.worker.title}", work_log_path(log.id))
