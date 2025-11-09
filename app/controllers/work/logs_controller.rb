@@ -22,7 +22,7 @@ class Work::LogsController < ApplicationController
   # Create new or copy existing record.
   def create
     original_id = params.dig(:work_log, :copy_from)
-    return super if original_id.blank?
+    return super if original_id.blank? # Create record as usual.
 
     original = find_record_or_redirect(original_id)
     return if original.nil?
@@ -90,6 +90,13 @@ class Work::LogsController < ApplicationController
   # @return [void]
   def redirect_to_work_log(id)
     redirect_to(work_log_path(id))
+  end
+
+  # Set attributes in object (from params hash).
+  def set_attributes_from_params
+    super
+
+    Work::Services::Logs::ApplyDefaults.new(log: @work_log).call if @work_log.new_record?
   end
 
   # @return [Hash]

@@ -73,6 +73,8 @@ work_logs:
       requirement_id: {value: same, visible: false}
       started_at: {value: same, visible: false}
       worker_id: {value: ~, visible: true}
+    create:
+      planned_duration: [min_estimated_duration, max_estimated_duration]
   manager:
     comment: "Manager"
     copy: ~
