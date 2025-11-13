@@ -21,7 +21,7 @@ class Work::Services::Logs::ApplyDefaults < Base::Service
   def call
     super do
       @config.create.each_pair do |log_attr, req_attr| # rubocop:disable Rails/SaveBang
-        log[log_attr] = Array.wrap(req_attr).filter_map { |x| value_from_requirement(x) }.first
+        log[log_attr] ||= Array.wrap(req_attr).filter_map { |x| value_from_requirement(x) }.first
       end
     end
   end

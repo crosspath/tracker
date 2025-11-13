@@ -30,7 +30,7 @@ ruby:
                 td
                   - case attr_options.type
                   - when "string"
-                    = ff.text_field(attr_name, value:)
+                    = ff.text_field(attr_name, value:, style: "min-width: calc(100% - 8px)")
                   - when "float"
                     ruby:
                       input_options = {
