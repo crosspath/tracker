@@ -21,6 +21,11 @@ class Work::Queries::Logs::ForPayouts < Base::Query
   def base_scope
     Work::Log
       .includes(:worker, requirement: :project)
-      .order("work_workers.position": :asc, "work_workers.title": :asc, kind: :asc)
+      .order(
+        "work_workers.position": :asc,
+        "work_workers.title": :asc,
+        kind: :asc,
+        requirement_id: :asc
+      )
   end
 end
