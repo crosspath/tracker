@@ -21,9 +21,11 @@ html
     / = stylesheet_link_tag "application"
     css:
       tr:nth-child(2n) { background-color: #ecf0e0; }
-      td { padding-top: 0.6em; padding-bottom: 0.6em; vertical-align: baseline; }
-      tr td:first-child { padding-left: 0.4em; }
+      td { padding: 0.6em 0 0.6em 0.4em; vertical-align: baseline; }
       tr td:last-child { padding-right: 0.4em; }
+      form td:has(textarea) { width: 100%; }
+      form input[type="text"], form textarea { box-sizing: border-box; width: 100%; }
+      form textarea { min-height: 40px; resize: vertical; }
 
   body
     - flash.each do |key, message|
