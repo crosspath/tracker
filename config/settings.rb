@@ -6,9 +6,9 @@ AppConfig =
 
     file("#{__dir__}/settings/default.yml")
 
-    # read_file_if_exists.call("#{__dir__}/settings/#{Rails.env}.yml")
+    read_file_if_exists.call("#{__dir__}/settings/#{Rails.env}.yml")
     read_file_if_exists.call("#{__dir__}/settings/local.yml")
-    # read_file_if_exists.call("#{__dir__}/settings/#{Rails.env}.local.yml")
+    read_file_if_exists.call("#{__dir__}/settings/#{Rails.env}.local.yml")
   end
 
 # ActiveRecord expects DATABASE_URL from ENV.

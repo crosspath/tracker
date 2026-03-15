@@ -40,8 +40,8 @@ javascript:
     selectRight.innerHTML = ""
 
     kindItem.reqs.forEach((req_kind) => {
-      const options = tpl.content.querySelector(`#tpl_${req_kind}`).childNodes
-      options.forEach((el) => selectRight.appendChild(el.cloneNode(true)))
+      const options = tpl.content.querySelector(`#tpl_${req_kind}`)?.childNodes
+      options?.forEach((el) => selectRight.appendChild(el.cloneNode(true)))
     })
   }
 
