@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gem "bootsnap", require: false
-gem "kamal", require: false
+# gem "kamal", require: false
 # gem "multi_sessions", github: "crosspath/multi-sessions"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5"
@@ -11,7 +11,7 @@ gem "rails", "~> 8"
 gem "rails-annotate-solargraph", group: :development, github: "crosspath/rails-annotate-solargraph"
 gem "settings", github: "crosspath/ruby-settings"
 gem "slim-rails"
-gem "thruster", require: false
+# gem "thruster", require: false
 gem "tzinfo-data", platforms: %i[windows jruby]
 
 group :development, :test do
