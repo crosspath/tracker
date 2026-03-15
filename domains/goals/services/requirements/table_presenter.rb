@@ -27,10 +27,8 @@ class Goals::Services::Requirements::TablePresenter < Base::Service
     return {} if @config.nil?
 
     @optional_data =
-      @config
-        .optional_data
-        .to_h { |key, props| [[key, props.comment], props.show_in_table] }
-        .filter_map { |k, v| k if v }
-        .to_h
+      @config.optional_data.to_h.each_with_object({}) do |(key, props), acc|
+        acc[key] = props.comment if props.show_in_table
+      end
   end
 end
