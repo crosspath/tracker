@@ -1,77 +1,59 @@
-requirements:
-  feature:
-    comment: "Feature"
-    optional_data: {}
-    unit_of_work: false
-  user_story:
-    comment: "User Story"
-    optional_data: {}
-    unit_of_work: false
-  task:
-    comment: "Task"
-    optional_data:
-      external_url:
-        type: string
-        nil: false
-        default: ""
-        comment: "External URL"
-        show_in_table: true
-      min_estimated_duration:
-        type: float
-        nil: true
-        default: ~
-        min_value: 0
-        max_value: 99.99
-        step: 0.01
-        comment: "Minimal estimated duration in hours"
-        show_in_table: false
-      max_estimated_duration:
-        type: float
-        nil: true
-        default: ~
-        min_value: 0
-        max_value: 99.99
-        step: 0.01
-        comment: "Maximal estimated duration in hours"
-        show_in_table: false
-    unit_of_work: true
-requirement_relations:
-  starts_after:
-    comment_for_left: "starts after"
-    comment_for_right: "should end before"
-    requirement_kinds:
-      - {left: feature, right: feature}
-      - {left: user_story, right: user_story}
-      - {left: task, right: task}
-  includes:
-    comment_for_left: "includes"
-    comment_for_right: "included in"
-    requirement_kinds:
-      - {left: feature, right: user_story}
-      - {left: user_story, right: task}
-work_logs:
-  executor:
-    comment: "Executor"
-    copy:
-      ended_at: {value: same, visible: false}
-      kind: {value: ~, visible: true}
-      planned_duration:
-        value:
-          - kind: executor
-            multiply: 1
-          - kind: manager
-            multiply: 0.3
-          - kind: reviewer
-            multiply: 0.05
-        visible: false
-      requirement_id: {value: same, visible: false}
-      started_at: {value: same, visible: false}
-      worker_id: {value: ~, visible: true}
-    create:
-      planned_duration: [min_estimated_duration, max_estimated_duration]
-  manager:
-    comment: "Manager"
-    copy: ~
-  reviewer:
-    comment: "Reviewer"
-    copy: ~
+# Example configuration:
+---
+# requirements:
+#   feature:
+#     comment: "Feature"
+#     optional_data: {}
+#     unit_of_work: false
+#   task:
+#     comment: "Task"
+#     optional_data:
+#       external_url:
+#         type: string
+#         nil: false
+#         default: ""
+#         comment: "External URL"
+#         show_in_table: false
+#       estimated_duration:
+#         type: float
+#         nil: true
+#         default: ~
+#         min_value: 0
+#         max_value: 99.99
+#         step: 0.01
+#         comment: "Estimated duration in hours"
+#         show_in_table: true
+#     unit_of_work: true
+# requirement_relations:
+#   starts_after:
+#     comment_for_left: "starts after"
+#     comment_for_right: "should end before"
+#     requirement_kinds:
+#       - {left: feature, right: feature}
+#       - {left: task, right: task}
+#   includes:
+#     comment_for_left: "includes"
+#     comment_for_right: "included in"
+#     requirement_kinds:
+#       - {left: feature, right: task}
+# work_logs:
+#   executor:
+#     comment: "Executor"
+#     copy:
+#       ended_at: {value: same, visible: false}
+#       kind: {value: ~, visible: true}
+#       planned_duration:
+#         value:
+#           - kind: executor
+#             multiply: 1
+#           - kind: reviewer
+#             multiply: 0.05
+#         visible: false
+#       requirement_id: {value: same, visible: false}
+#       started_at: {value: same, visible: false}
+#       worker_id: {value: ~, visible: true}
+#     create:
+#       planned_duration: estimated_duration
+#   reviewer:
+#     comment: "Reviewer"
+#     copy: ~
