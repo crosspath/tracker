@@ -2,14 +2,10 @@ requirements:
   feature:
     comment: "Feature"
     optional_data: {}
-    relations:
-      includes: [user_story]
     unit_of_work: false
   user_story:
     comment: "User Story"
     optional_data: {}
-    relations:
-      includes: [task]
     unit_of_work: false
   task:
     comment: "Task"
@@ -38,8 +34,6 @@ requirements:
         step: 0.01
         comment: "Maximal estimated duration in hours"
         show_in_table: false
-    relations:
-      includes: []
     unit_of_work: true
 requirement_relations:
   starts_after:
