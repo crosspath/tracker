@@ -31,6 +31,15 @@ class RequirementsController < ApplicationController
         .order(kind: :asc, "work_workers.position": :asc)
   end
 
+  # Update record (if `save_as_copy` is not set). Create record (if `save_as_copy` is set).
+  def update
+    return super if !params.key?(:save_as_copy)
+
+    init_object
+    set_attributes_from_params
+    create # rubocop:disable Rails/SaveBang
+  end
+
   private
 
   # Find record in table.

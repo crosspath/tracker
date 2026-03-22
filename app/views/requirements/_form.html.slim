@@ -44,7 +44,12 @@ ruby:
                     = ff.number_field(attr_name, input_options.compact_blank)
     tfoot
       tr
-        td colspan="2" = f.submit(submit_label)
+        td = f.submit(submit_label)
+        td
+          - if @requirement.persisted?
+            = label_tag(:save_as_copy) do
+              => check_box_tag(:save_as_copy)
+              | Save as copy
 
 css:
   th {width: 12em}
