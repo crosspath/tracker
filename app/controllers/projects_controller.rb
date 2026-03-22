@@ -3,7 +3,7 @@
 # Manage projects list.
 class ProjectsController < ApplicationController
   crud do
-    attributes %w[description title]
+    attributes %w[description title] + [{settings: {}}]
     class_name "Goals::Project"
     item_name :project
     index_path { projects_path }

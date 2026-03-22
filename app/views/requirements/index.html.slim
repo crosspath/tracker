@@ -1,6 +1,6 @@
 h1 Requirements
 - @requirements.group_by(&:kind).each do |kind, requirements|
-  - table_presenter = Goals::Services::Requirements::TablePresenter.new(kind:, requirements:)
+  - table_presenter = Goals::Services::Requirements::TablePresenter.new(kind:, project: @project, requirements:)
   - unit_of_work = AppConfig.requirements[kind].unit_of_work
   h3 = "#{table_presenter.kind_comment} (total: #{requirements.size})"
   - if !requirements.empty?

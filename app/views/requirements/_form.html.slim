@@ -21,9 +21,9 @@ ruby:
         th = @requirement.column_comments[:description]
         td = f.text_area(:description)
       = f.fields_for(:optional_data) do |fo|
-        - AppConfig.requirements.each_pair do |kind, options|
+        - @project.config_for_optional_data_for_requirements.each do |kind, field_config|
           = fo.fields_for(kind, @requirement.optional_data) do |ff|
-            - options.optional_data.each_pair do |attr_name, attr_options|
+            - field_config.each_pair do |attr_name, attr_options|
               - value = @requirement.optional_data[attr_name.to_s]
               tr data-optional="" data-kind=kind style="display: none"
                 th = attr_options.comment

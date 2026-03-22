@@ -10,6 +10,28 @@
       tr
         th = @project.column_comments[:description]
         td = f.text_area(:description)
+      tr
+        th = @project.column_comments[:settings]
+        td
+          = f.fields_for(:settings) do |ff|
+            p: strong Requirement types &amp; optional fields
+            - project_requirement_kinds = @project.requirement_kinds
+            - AppConfig.requirements.each_pair do |req_kind, req_options|
+              div
+                = ff.fields_for(:requirement_kinds) do |fff|
+                  p
+                    = label_tag do
+                      => fff.check_box(req_kind, include_hidden: false, checked: project_requirement_kinds.include?(req_kind.to_s))
+                      = req_options.comment
+                = ff.fields_for(:requirement_optional_data) do |fff|
+                  = fff.fields_for(req_kind) do |ffff|
+                    div style="padding-left: 1.5em"
+                      - project_requirement_optional_fields = @project.requirement_optional_data(req_kind)
+                      - req_options.optional_data.each_pair do |attr_name, attr_options|
+                        p
+                          = label_tag do
+                            => ffff.check_box(attr_name, include_hidden: false, checked: project_requirement_optional_fields.include?(attr_name.to_s))
+                            = attr_options.comment
     tfoot
       tr
         td colspan="2" = f.submit(submit_label)

@@ -3,7 +3,7 @@
 # Manage payouts list.
 class PayoutsController < ApplicationController
   crud do
-    attributes(%w[money paid_at rate worker_id] + [log_ids: []])
+    attributes(%w[money paid_at rate worker_id] + [{log_ids: []}])
     class_name "Finance::Payout"
     item_name :payout
     index_path { payouts_path }
