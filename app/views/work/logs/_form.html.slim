@@ -15,7 +15,6 @@ ruby:
 
 = form_for(work_log, url: form_url) do |f|
   - form_presenter = Work::Services::Logs::FormPresenter.new(form: f)
-  - Rails.logger.error(self.class.ancestors - Class.ancestors)
   - if copy_presenter
     = f.hidden_field(:copy_from, value: copy_presenter.log.id)
   table style="border-collapse: collapse"

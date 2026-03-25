@@ -12,8 +12,5 @@ class Finance::Payout < Base::Model
 
   has_many :requirements, through: :logs, source: :requirement
 
-  before_validation do
-    Rails.logger.error(inspect) # TODO: remove
-    self.rate ||= Work::Worker.find_by(id: worker_id)&.rate
-  end
+  before_validation { self.rate ||= Work::Worker.find_by(id: worker_id)&.rate }
 end
