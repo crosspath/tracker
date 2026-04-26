@@ -21,7 +21,8 @@
                 = ff.fields_for(:requirement_kinds) do |fff|
                   p
                     = label_tag do
-                      => fff.check_box(req_kind, include_hidden: false, checked: project_requirement_kinds.include?(req_kind.to_s))
+                      - checked = project_requirement_kinds.include?(req_kind.to_s)
+                      => fff.check_box(req_kind, include_hidden: false, checked:)
                       = req_options.comment
                 = ff.fields_for(:requirement_optional_data) do |fff|
                   = fff.fields_for(req_kind) do |ffff|
@@ -30,7 +31,8 @@
                       - req_options.optional_data.each_pair do |attr_name, attr_options|
                         p
                           = label_tag do
-                            => ffff.check_box(attr_name, include_hidden: false, checked: project_requirement_optional_fields.include?(attr_name.to_s))
+                            - checked = project_requirement_optional_fields.include?(attr_name.to_s)
+                            => ffff.check_box(attr_name, include_hidden: false, checked:)
                             = attr_options.comment
     tfoot
       tr
