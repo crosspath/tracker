@@ -26,7 +26,7 @@ class Goals::Project < Base::Model
   # @param requirement_kind [String]
   # @return [Array<String>]
   def requirement_optional_data(requirement_kind)
-    settings.dig("requirements", requirement_kind) || []
+    settings.dig("requirements", requirement_kind.to_s) || []
   end
 
   # @param params [ActionController:Params]
